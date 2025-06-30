@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="bg">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Админ панел</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-6">
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">📋 Получени запитвания</h1>
+    <a href="{{ url_for('export_csv') }}"
+      class="mb-4 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">⬇️ Експортирай CSV</a>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="mb-4">
+      {% for category, message in messages %}
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <table class="w-full table-auto border-collapse">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="border p-2">#</th>
+          <th class="border p-2">Име</th>
+          <th class="border p-2">Имейл</th>
+          <th class="border p-2">Телефон</th>
+          <th class="border p-2">Съобщение</th>
+          <th class="border p-2">Действие</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for contact in contacts %}
+        <tr class="hover:bg-gray-50">
+          <td class="border p-2">{{ contact.id }}</td>
+          <td class="border p-2">{{ contact.name }}</td>
+          <td class="border p-2">{{ contact.email }}</td>
+          <td class="border p-2">{{ contact.phone }}</td>
+          <td class="border p-2 whitespace-pre-wrap">{{ contact.message }}</td>
+          <td>
+            <form action="{{ url_for('delete_request', request_id=contact.id) }}" method="post" class="mt-2">
+              <button type="submit" class="text-sm text-red-400 hover:underline">Идтрий</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>
